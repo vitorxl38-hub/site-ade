@@ -1,0 +1,124 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile information",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string" },
+        "displayName": { "type": "string" },
+        "role": { "type": "string", "enum": ["admin", "client"] },
+        "clientId": { "type": "string", "description": "Associated business if role is client" },
+        "photoURL": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email", "role"]
+    },
+    "Client": {
+      "title": "Client",
+      "description": "Business client of APEX",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "companyName": { "type": "string" },
+        "tradingName": { "type": "string" },
+        "cnpj": { "type": "string" },
+        "email": { "type": "string" },
+        "phone": { "type": "string" },
+        "address": { "type": "string" },
+        "contractStatus": { "type": "string", "enum": ["active", "onboarding", "suspended"] },
+        "plan": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["companyName", "cnpj", "contractStatus"]
+    },
+    "FinancialTransaction": {
+      "title": "Financial Transaction",
+      "description": "Income or expense record",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "clientId": { "type": "string" },
+        "type": { "type": "string", "enum": ["income", "expense"] },
+        "category": { "type": "string" },
+        "description": { "type": "string" },
+        "amount": { "type": "number" },
+        "date": { "type": "string", "format": "date" },
+        "status": { "type": "string", "enum": ["pending", "paid", "cancelled"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["clientId", "type", "amount", "date", "status"]
+    },
+    "Document": {
+      "title": "Document",
+      "description": "Files exchanged between APEX and client",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "clientId": { "type": "string" },
+        "name": { "type": "string" },
+        "type": { "type": "string", "enum": ["DAS", "Balancete", "Contrato", "Folha", "Imposto", "Outros"] },
+        "url": { "type": "string" },
+        "uploadedBy": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "status": { "type": "string", "enum": ["available", "archived"] }
+      },
+      "required": ["clientId", "name", "type", "url"]
+    },
+    "InventoryItem": {
+      "title": "Inventory Item",
+      "description": "Product in client stock",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "clientId": { "type": "string" },
+        "sku": { "type": "string" },
+        "name": { "type": "string" },
+        "quantity": { "type": "number" },
+        "minQuantity": { "type": "number" },
+        "price": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["clientId", "name", "quantity"]
+    },
+    "CRMLead": {
+      "title": "CRM Lead",
+      "description": "Potential client for APEX",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "phone": { "type": "string" },
+        "stage": { "type": "string", "enum": ["lead", "proposal", "contract", "won", "lost"] },
+        "notes": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "stage"]
+    },
+    "DigitalCertificate": {
+      "title": "Digital Certificate",
+      "description": "Control of digital certificates",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "clientId": { "type": "string" },
+        "type": { "type": "string" },
+        "expiryDate": { "type": "string", "format": "date" },
+        "status": { "type": "string", "enum": ["valid", "expiring", "expired"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["clientId", "expiryDate"]
+    }
+  },
+  "firestore": {
+    "users": { "schema": "User", "description": "Global user profiles" },
+    "clients": { "schema": "Client", "description": "Business entities" },
+    "transactions": { "schema": "FinancialTransaction", "description": "Financial records for all clients" },
+    "documents": { "schema": "Document", "description": "Document exchange repository" },
+    "inventory": { "schema": "InventoryItem", "description": "Stock control for clients" },
+    "leads": { "schema": "CRMLead", "description": "APEX sales pipeline" },
+    "certificates": { "schema": "DigitalCertificate", "description": "Digital certificate tracking" }
+  }
+}
